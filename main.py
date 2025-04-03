@@ -1,16 +1,16 @@
 from googleapiclient.discovery import build
 
 API_KEY = "YOUR_YOUTUBE_API_KEY"
-YOUTUBE = build('youtube', 'v3', developerKey=API_KEY)
 
 def search_videos(query, max_results=10):
-    request = YOUTUBE.search().list(
+    youtube = build('youtube', 'v3', developerKey=API_KEY)  # Initialize API inside function
+    request = youtube.search().list(
         q=query,
         part="snippet",
         maxResults=max_results,
         type="video",
-        videoLicense="creativeCommon",  # Only Creative Commons (CC BY) videos
-        videoDuration="short"  # Videos under 4 minutes
+        videoLicense="creativeCommon",  # Filter Creative Commons (CC BY) videos
+        videoDuration="short"  # Filter short videos (under 4 minutes)
     )
     response = request.execute()
     
@@ -23,6 +23,7 @@ def search_videos(query, max_results=10):
     
     return video_data
 
-videos = search_videos("infant emotions")
-for video in videos:
-    print(video)
+if __name__ == "__main__":
+    videos = search_videos("infant emotions")
+    for video in videos:
+        print(video)
